@@ -1,0 +1,59 @@
+export SUPERSTAQ_API_KEY="87639b1f7d7f7c572ffa6be0bca761c2a5da35623136c82926da63d62b846e2b"
+
+alias gs='git status'
+alias gpu='watch -n 1 nvidia-smi'
+
+# See the tutorial on: https://docs.nersc.gov/connect/mfa/#using-mfa-with-ssh
+# If the key is expired, run reset-sshproxy
+alias reset-sshproxy="~/.ssh/sshproxy.sh -u teague"
+alias nersc-sshproxy="ssh -l teague -i ~/.ssh/nersc perlmutter.nersc.gov"
+alias ssh-eagle="ssh teague@10.141.15.191"
+alias ssh-cheetah="ssh teague@10.141.15.245"
+
+# Shortcuts to pipe jupyter notebooks from cheetah and eagle
+# Once you're in, you want to start the notebook with `jupyter lab --no-browser`
+function cheetah-jupyter-ssh() {
+  # Default values
+  local local_port=8888
+  local remote_port=8888
+
+  local ssh_user_host="teague@10.141.15.245"
+
+  # Check if we have arguments for ports
+  if [[ -n "$1" ]]; then
+    local_port="$1"
+  fi
+
+  if [[ -n "$2" ]]; then
+    remote_port="$2"
+  fi
+
+  # Execute the SSH command with port forwarding
+  echo "Setting up SSH tunnel to cheetah with local port $local_port forwarded to remote port $remote_port"
+  ssh -L ${local_port}:localhost:${remote_port} ${ssh_user_host}
+}
+
+function eagle-jupyter-ssh() {
+  # Default values
+  local local_port=8888
+  local remote_port=8888
+
+  local ssh_user_host="teague@10.141.15.191"
+
+  # Check if we have arguments for ports
+  if [[ -n "$1" ]]; then
+    local_port="$1"
+  fi
+
+  if [[ -n "$2" ]]; then
+    remote_port="$2"
+  fi
+
+  # Execute the SSH command with port forwarding
+  echo "Setting up SSH tunnel to eagle with local port $local_port forwarded to remote port $remote_port"
+  ssh -L ${local_port}:localhost:${remote_port} ${ssh_user_host}
+}
+
+if [ -f ~/.bashrc ]; then
+  . ~/.bashrc
+fi
